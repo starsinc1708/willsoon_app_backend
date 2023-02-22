@@ -1,6 +1,6 @@
 package com.willsoon.willsoon_0_4.registration.token;
 
-import com.willsoon.willsoon_0_4.entity.AppUser;
+import com.willsoon.willsoon_0_4.entity.AppUser.AppUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.Setter;
 
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter

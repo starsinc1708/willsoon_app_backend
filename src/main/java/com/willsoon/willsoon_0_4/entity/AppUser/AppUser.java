@@ -1,5 +1,6 @@
-package com.willsoon.willsoon_0_4.entity;
+package com.willsoon.willsoon_0_4.entity.AppUser;
 
+import com.willsoon.willsoon_0_4.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter

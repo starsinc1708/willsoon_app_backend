@@ -1,4 +1,4 @@
-package com.willsoon.willsoon_0_4.entity;
+package com.willsoon.willsoon_0_4.entity.AppUser;
 
 import com.willsoon.willsoon_0_4.registration.token.ConfirmationToken;
 import com.willsoon.willsoon_0_4.registration.token.ConfirmationTokenService;

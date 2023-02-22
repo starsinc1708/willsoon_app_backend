@@ -1,6 +1,6 @@
 package com.willsoon.willsoon_0_4.auth;
 
-import com.willsoon.willsoon_0_4.entity.AppUserRepository;
+import com.willsoon.willsoon_0_4.entity.AppUser.AppUserRepository;
 import com.willsoon.willsoon_0_4.security.config.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

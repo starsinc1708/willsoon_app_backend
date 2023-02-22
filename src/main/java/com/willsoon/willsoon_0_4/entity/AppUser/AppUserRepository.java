@@ -1,4 +1,4 @@
-package com.willsoon.willsoon_0_4.entity;
+package com.willsoon.willsoon_0_4.entity.AppUser;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
