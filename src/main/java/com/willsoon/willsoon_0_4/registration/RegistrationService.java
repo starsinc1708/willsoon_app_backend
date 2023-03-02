@@ -1,11 +1,14 @@
 package com.willsoon.willsoon_0_4.registration;
 
+import com.willsoon.willsoon_0_4.auth.AuthenticationErrorResponse;
+import com.willsoon.willsoon_0_4.auth.AuthenticationResponse;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUser;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUserRole;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUserService;
 import com.willsoon.willsoon_0_4.registration.email.EmailSender;
 import com.willsoon.willsoon_0_4.registration.token.ConfirmationToken;
 import com.willsoon.willsoon_0_4.registration.token.ConfirmationTokenService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,30 +24,42 @@ public class RegistrationService {
     
     private final EmailSender emailSender;
     private final ConfirmationTokenService confirmationTokenService;
-    public String register(RegistrationRequest request) {
+
+    public AuthenticationResponse register(RegistrationRequest request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
+
         if(!isValidEmail) {
             throw new IllegalStateException("email not valid");
         }
 
-        String token = appUserService.signUpUser(
-                new AppUser(
-                        request.getUsername(),
-                        request.getEmail(),
-                        request.getPassword(),
-                        AppUserRole.USER
-                )
-        );
+        try {
+            String token = appUserService.signUpUser(
+                    new AppUser(
+                            request.getUsername(),
+                            request.getEmail(),
+                            request.getPassword(),
+                            AppUserRole.USER
+                    )
+            );
 
-        String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token;
+            String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token;
 
-        emailSender.send(
-                request.getEmail(),
-                buildEmail(request.getUsername(), link));
+            emailSender.send(
+                    request.getEmail(),
+                    buildEmail(request.getUsername(), link));
 
-        appUserService.enableAppUser(
+            appUserService.enableAppUser(
                     request.getEmail());
-        return token;
+
+            return AuthenticationResponse.builder().build();
+
+        } catch (IllegalStateException e) {
+            return AuthenticationErrorResponse.builder()
+                    .errorBody(e.toString())
+                    .build();
+        }
+
+
     }
 
     private String buildEmail(String name, String link) {
