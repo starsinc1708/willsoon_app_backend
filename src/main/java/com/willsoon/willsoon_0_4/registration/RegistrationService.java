@@ -27,7 +27,7 @@ public class RegistrationService {
             throw new IllegalStateException("email not valid");
         }
 
-        String token =appUserService.signUpUser(
+        String token = appUserService.signUpUser(
                 new AppUser(
                         request.getUsername(),
                         request.getEmail(),
@@ -42,6 +42,8 @@ public class RegistrationService {
                 request.getEmail(),
                 buildEmail(request.getUsername(), link));
 
+        appUserService.enableAppUser(
+                    request.getEmail());
         return token;
     }
 
