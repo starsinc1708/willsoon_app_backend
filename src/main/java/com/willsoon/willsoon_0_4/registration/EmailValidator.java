@@ -9,7 +9,6 @@ public class EmailValidator implements Predicate<String> {
 
     @Override
     public boolean test(String s) {
-        // TODO: Regex valiodator
-        return true;
+        return s.matches("^([\\w-\\.]+){1,64}@([\\w&&[^_]]+){2,255}.[a-z]{2,}$");
     }
 }

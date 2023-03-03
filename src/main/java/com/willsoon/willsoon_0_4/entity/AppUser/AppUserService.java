@@ -1,10 +1,14 @@
 package com.willsoon.willsoon_0_4.entity.AppUser;
 
+import com.willsoon.willsoon_0_4.registration.EmailValidator;
 import com.willsoon.willsoon_0_4.registration.token.ConfirmationToken;
 import com.willsoon.willsoon_0_4.registration.token.ConfirmationTokenService;
+import com.willsoon.willsoon_0_4.security.config.customExceptions.EmailAlreadyExistsException;
+import com.willsoon.willsoon_0_4.security.config.customExceptions.UsernameAlreadyExistsException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.MailSendException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +27,7 @@ public class AppUserService implements UserDetailsService {
 
     private final  AppUserRepository appUserRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
+    private final EmailValidator emailValidator;
     private final ConfirmationTokenService confirmationTokenService;
     private final static String USER_NOT_FOUND_MSG =
             "user with email %s not found";
@@ -37,14 +41,23 @@ public class AppUserService implements UserDetailsService {
     }
 
     public String signUpUser(AppUser appUser) {
-        boolean emailExists = appUserRepository.findByEmail(appUser.getEmail()).isPresent();
-        boolean usernameExists = appUserRepository.findByUsername(appUser.getUsername()).isPresent();
-        if(emailExists) {
-            throw new IllegalStateException("email already taken");
+
+        boolean isValidEmail = emailValidator.test(appUser.getEmail());
+
+        if(!isValidEmail) {
+            throw new MailSendException("email not valid");
         }
-        if(usernameExists) {
-            throw new IllegalStateException("username already taken");
+
+        if(appUserRepository.findByEmail(appUser.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException("email already taken");
         }
+
+        if(appUserRepository.findByUsername(appUser.getUsername()).isPresent()) {
+            throw new UsernameAlreadyExistsException("username already taken");
+        }
+
+
+
         String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
 
         appUser.setPassword(encodedPassword);
@@ -63,7 +76,6 @@ public class AppUserService implements UserDetailsService {
         );
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
-        // TODO: SEND EMAIL
         return token;
     }
 

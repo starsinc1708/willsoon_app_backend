@@ -1,8 +1,18 @@
 package com.willsoon.willsoon_0_4.registration;
 
-import com.willsoon.willsoon_0_4.auth.AuthenticationResponse;
+import com.willsoon.willsoon_0_4.entity.AppUser.AppUserService;
+import com.willsoon.willsoon_0_4.security.config.ErrorResponse;
+import com.willsoon.willsoon_0_4.security.config.customExceptions.EmailAlreadyExistsException;
+import com.willsoon.willsoon_0_4.security.config.customExceptions.UsernameAlreadyExistsException;
+import jakarta.mail.internet.AddressException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSendException;
 import org.springframework.web.bind.annotation.*;
+
+
+
 
 @RestController
 @RequestMapping(path = "api/v1/auth/registration")
@@ -11,10 +21,25 @@ public class RegistrationController {
 
     private RegistrationService registrationService;
 
+
+
     @PostMapping
-    public AuthenticationResponse register(@RequestBody RegistrationRequest request) {
-        return registrationService.register(request);
+    public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
+        try {
+            registrationService.register(request);
+            return ResponseEntity.ok().build();
+        } catch (UsernameAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new ErrorResponse("Username already exists"));
+        } catch (EmailAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new ErrorResponse("Email already exists"));
+        } catch (MailSendException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Failed to send email"));
+        }
     }
+
 
     @GetMapping(path = "confirm")
     public String confirm(@RequestParam("token") String token) {
