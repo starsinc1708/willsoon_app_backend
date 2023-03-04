@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,8 +21,16 @@ public interface AppUserRepository extends JpaRepository<AppUser, UUID> {
     @Modifying
     @Query("UPDATE AppUser a " +
             "SET a.enabled = TRUE WHERE a.email = ?1")
-    int enableAppUser(String email);
+    void enableAppUser(String email);
 
     Optional<AppUser> findByUsername(String username);
+
+    @Query("SELECT u FROM AppUser u " +
+            "INNER JOIN Friendship f ON u.id = CASE " +
+            "WHEN f.user1.id = :userId THEN f.user2.id ELSE f.user1.id END " +
+            "WHERE f.user1.id = :userId OR f.user2.id = :userId")
+    List<AppUser> findFriendsById(UUID userId);
+
+    List<AppUser> findAllByEnabledTrue();
 
 }

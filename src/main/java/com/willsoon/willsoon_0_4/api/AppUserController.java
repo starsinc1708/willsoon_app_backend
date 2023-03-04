@@ -3,6 +3,7 @@ package com.willsoon.willsoon_0_4.api;
 import com.willsoon.willsoon_0_4.auth.AuthenticationResponse;
 import com.willsoon.willsoon_0_4.auth.RefreshTokenService;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUser;
+import com.willsoon.willsoon_0_4.entity.AppUser.AppUserPojo;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUserRepository;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUserService;
 import com.willsoon.willsoon_0_4.security.config.JwtService;
@@ -28,7 +29,7 @@ public class AppUserController {
 
     private final RefreshTokenService refreshTokenService;
     @GetMapping("/allUsers")
-    public ResponseEntity<List<AppUser>> getUsers() {
+    public ResponseEntity<List<AppUserPojo>> getUsers() {
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
@@ -37,6 +38,25 @@ public class AppUserController {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/v1/user/save").toUriString());
         return ResponseEntity.created(uri).body(userService.saveUser(user));
     }
+
+    @GetMapping("/friends")
+    public ResponseEntity<List<AppUserPojo>> getUserFriends(@RequestParam("token") String accessToken) {
+        String username = jwtService.extractUsername(accessToken);
+        AppUser curUser = userRepository.findByEmail(username).get();
+
+        /*List<AppUser> friends = userRepository.findFriendsById(curUser.getId());
+        List<Map<String, Object>> friendList = friends.stream().map(friend -> {
+            Map<String, Object> friendMap = new HashMap<>();
+            friendMap.put("id", friend.getId());
+            friendMap.put("username", friend.getDBUsername());
+            friendMap.put("email", friend.getUsername());
+            return friendMap;
+        }).toList();
+
+        return ResponseEntity.ok(friendList);*/
+        return ResponseEntity.ok().body(userService.getUserFriends(curUser.getId()));
+    }
+
 
     @GetMapping("/refresh")
     public AuthenticationResponse refreshTokens(

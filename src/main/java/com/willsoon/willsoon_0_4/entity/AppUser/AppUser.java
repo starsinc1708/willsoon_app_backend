@@ -65,7 +65,7 @@ public class AppUser extends BaseEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override
@@ -86,5 +86,9 @@ public class AppUser extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public String getDBUsername() {
+        return username;
     }
 }
