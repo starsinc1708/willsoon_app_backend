@@ -72,7 +72,6 @@ public class AppUserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found" + uuid.toString()));
 
         return new User(user.getUsername(), user.getPassword(), user.getAuthorities());*/
-
         return appUserRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new UsernameNotFoundException(
@@ -94,8 +93,6 @@ public class AppUserService implements UserDetailsService {
         if(appUserRepository.findByUsername(appUser.getUsername()).isPresent()) {
             throw new UsernameAlreadyExistsException("username already taken");
         }
-
-
 
         String encodedPassword = bCryptPasswordEncoder.encode(appUser.getPassword());
 

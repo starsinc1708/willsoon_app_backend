@@ -43,17 +43,6 @@ public class AppUserController {
     public ResponseEntity<List<AppUserPojo>> getUserFriends(@RequestParam("token") String accessToken) {
         String username = jwtService.extractUsername(accessToken);
         AppUser curUser = userRepository.findByEmail(username).get();
-
-        /*List<AppUser> friends = userRepository.findFriendsById(curUser.getId());
-        List<Map<String, Object>> friendList = friends.stream().map(friend -> {
-            Map<String, Object> friendMap = new HashMap<>();
-            friendMap.put("id", friend.getId());
-            friendMap.put("username", friend.getDBUsername());
-            friendMap.put("email", friend.getUsername());
-            return friendMap;
-        }).toList();
-
-        return ResponseEntity.ok(friendList);*/
         return ResponseEntity.ok().body(userService.getUserFriends(curUser.getId()));
     }
 
