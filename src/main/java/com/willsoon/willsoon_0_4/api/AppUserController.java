@@ -40,9 +40,16 @@ public class AppUserController {
     }
 
     @GetMapping("/friends")
-    public ResponseEntity<List<AppUserPojo>> getUserFriends(@RequestParam("token") String accessToken) {
-        String username = jwtService.extractUsername(accessToken);
-        AppUser curUser = userRepository.findByEmail(username).get();
+    public ResponseEntity<List<AppUserPojo>> getUserFriends(@NonNull HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        final String jwt;
+        final String userEmail;
+        if (authHeader == null || !authHeader.startsWith("Bearer")) {
+            throw new RuntimeException("Refresh Token is Missing");
+        }
+        jwt = authHeader.substring(7);
+        userEmail = jwtService.extractUsername(jwt);
+        AppUser curUser = userRepository.findByEmail(userEmail).get();
         return ResponseEntity.ok().body(userService.getUserFriends(curUser.getId()));
     }
 
