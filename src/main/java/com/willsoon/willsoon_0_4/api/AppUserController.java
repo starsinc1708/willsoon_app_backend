@@ -28,6 +28,20 @@ public class AppUserController {
     private final JwtService jwtService;
 
     private final RefreshTokenService refreshTokenService;
+
+    public String extractEmailFromToken(@NonNull HttpServletRequest request) {
+        final String authHeader = request.getHeader("Authorization");
+        final String jwt;
+        final String userEmail;
+        if (authHeader == null || !authHeader.startsWith("Bearer")) {
+            throw new RuntimeException("Refresh Token is Missing");
+        }
+        jwt = authHeader.substring(7);
+        userEmail = jwtService.extractUsername(jwt);
+        return userEmail;
+    }
+
+
     @GetMapping("/allUsers")
     public ResponseEntity<List<AppUserPojo>> getUsers() {
         return ResponseEntity.ok().body(userService.getUsers());
@@ -41,15 +55,7 @@ public class AppUserController {
 
     @GetMapping("/friends")
     public ResponseEntity<List<AppUserPojo>> getUserFriends(@NonNull HttpServletRequest request) {
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String userEmail;
-        if (authHeader == null || !authHeader.startsWith("Bearer")) {
-            throw new RuntimeException("Refresh Token is Missing");
-        }
-        jwt = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(jwt);
-        AppUser curUser = userRepository.findByEmail(userEmail).get();
+        AppUser curUser = userRepository.findByEmail(extractEmailFromToken(request)).get();
         return ResponseEntity.ok().body(userService.getUserFriends(curUser.getId()));
     }
 
@@ -58,18 +64,8 @@ public class AppUserController {
     public AuthenticationResponse refreshTokens(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response) {
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String userEmail;
-        if (authHeader == null || !authHeader.startsWith("Bearer")) {
-            throw new RuntimeException("Refresh Token is Missing");
-        }
-        jwt = authHeader.substring(7);
-        userEmail = jwtService.extractUsername(jwt);
-
-        var user = userRepository.findByEmail(userEmail)
+        var user = userRepository.findByEmail(extractEmailFromToken(request))
                 .orElseThrow();
-
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = refreshTokenService.generateRefreshToken(user);
 
