@@ -40,10 +40,10 @@ public class AppUserController {
     }
 
 
-    /*@GetMapping("/allUsers")
+    @GetMapping("/allUsers")
     public ResponseEntity<List<AppUserPojo>> getUsers() {
         return ResponseEntity.ok().body(userService.getUsers());
-    }*/
+    }
 
     @PostMapping("/save")
     public ResponseEntity<AppUser> saveUser(@RequestBody AppUser user) {
@@ -62,6 +62,7 @@ public class AppUserController {
     public AuthenticationResponse refreshTokens(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response) {
+
         var user = userRepository.findByEmail(extractEmailFromToken(request))
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);

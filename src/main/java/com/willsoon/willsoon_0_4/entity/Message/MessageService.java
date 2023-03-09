@@ -1,6 +1,5 @@
 package com.willsoon.willsoon_0_4.entity.Message;
 
-import com.willsoon.willsoon_0_4.entity.AppUser.AppUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,6 @@ public class MessageService {
 
     private final MessageRepository messageRepository;
 
-    private final AppUserRepository appUserRepository;
 
     public Message save(Message chatMessage) {
         chatMessage.setStatus(MessageStatus.DELIVERED);
@@ -34,10 +32,6 @@ public class MessageService {
                 })
                 .orElseThrow(() ->
                         new ResourceNotFoundException("can't find message (" + id + ")"));
-    }
-
-    public Long countNewMessages(UUID senderId, UUID recipientId) {
-        return messageRepository.countBySenderAndRecipientAndStatus(appUserRepository.findById(senderId), appUserRepository.findById(recipientId), MessageStatus.RECEIVED);
     }
 
     public MessagePojo findLastMessageInChat(UUID chatId) {

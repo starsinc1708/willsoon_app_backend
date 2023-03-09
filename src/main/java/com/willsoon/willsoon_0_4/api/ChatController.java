@@ -2,13 +2,11 @@ package com.willsoon.willsoon_0_4.api;
 
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUser;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUserRepository;
-import com.willsoon.willsoon_0_4.entity.AppUser.AppUserService;
 import com.willsoon.willsoon_0_4.entity.Chat.Chat;
 import com.willsoon.willsoon_0_4.entity.Chat.ChatNotification;
 import com.willsoon.willsoon_0_4.entity.Chat.ChatPojo;
 import com.willsoon.willsoon_0_4.entity.Chat.ChatService;
 import com.willsoon.willsoon_0_4.entity.Message.Message;
-import com.willsoon.willsoon_0_4.entity.Message.MessageRepository;
 import com.willsoon.willsoon_0_4.entity.Message.MessageService;
 import com.willsoon.willsoon_0_4.security.config.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,11 +26,7 @@ import java.util.List;
 public class ChatController {
 
     private final ChatService chatService;
-
-    private final AppUserService userService;
-
     private final AppUserRepository userRepository;
-    private final MessageRepository messageRepository;
     private final MessageService messageService;
     private final SimpMessagingTemplate messagingTemplate;
     private final JwtService jwtService;
