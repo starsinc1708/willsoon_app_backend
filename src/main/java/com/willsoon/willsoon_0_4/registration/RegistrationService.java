@@ -1,8 +1,5 @@
 package com.willsoon.willsoon_0_4.registration;
 
-import com.willsoon.willsoon_0_4.auth.AuthenticationErrorResponse;
-import com.willsoon.willsoon_0_4.auth.AuthenticationResponse;
-import com.willsoon.willsoon_0_4.auth.MyResponse;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUser;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUserRepository;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUserRole;
@@ -10,11 +7,7 @@ import com.willsoon.willsoon_0_4.entity.AppUser.AppUserService;
 import com.willsoon.willsoon_0_4.registration.email.EmailSender;
 import com.willsoon.willsoon_0_4.registration.token.ConfirmationToken;
 import com.willsoon.willsoon_0_4.registration.token.ConfirmationTokenService;
-import com.willsoon.willsoon_0_4.security.config.customExceptions.EmailAlreadyExistsException;
-import com.willsoon.willsoon_0_4.security.config.customExceptions.UsernameAlreadyExistsException;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.mail.MailSendException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,18 +1,13 @@
 package com.willsoon.willsoon_0_4.registration;
 
-import com.willsoon.willsoon_0_4.entity.AppUser.AppUserService;
 import com.willsoon.willsoon_0_4.security.config.ErrorResponse;
 import com.willsoon.willsoon_0_4.security.config.customExceptions.EmailAlreadyExistsException;
 import com.willsoon.willsoon_0_4.security.config.customExceptions.UsernameAlreadyExistsException;
-import jakarta.mail.internet.AddressException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailSendException;
 import org.springframework.web.bind.annotation.*;
-
-
-
 
 @RestController
 @RequestMapping(path = "api/v1/auth/registration")
@@ -20,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 public class RegistrationController {
 
     private RegistrationService registrationService;
-
-
 
     @PostMapping
     public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
@@ -40,8 +33,7 @@ public class RegistrationController {
         }
     }
 
-
-    @GetMapping(path = "confirm")
+    @PostMapping(path = "confirm")
     public String confirm(@RequestParam("token") String token) {
         return registrationService.confirmToken(token);
     }

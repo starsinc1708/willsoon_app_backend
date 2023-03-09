@@ -1,7 +1,12 @@
 package com.willsoon.willsoon_0_4.entity.AppUser;
 
+import com.willsoon.willsoon_0_4.entity.Chat.Chat;
+import com.willsoon.willsoon_0_4.entity.Chat.ChatRepository;
 import com.willsoon.willsoon_0_4.entity.Friendship.Friendship;
 import com.willsoon.willsoon_0_4.entity.Friendship.FriendshipRepository;
+import com.willsoon.willsoon_0_4.entity.Message.Message;
+import com.willsoon.willsoon_0_4.entity.Message.MessageRepository;
+import com.willsoon.willsoon_0_4.entity.Message.MessageStatus;
 import com.willsoon.willsoon_0_4.registration.EmailValidator;
 import com.willsoon.willsoon_0_4.registration.token.ConfirmationToken;
 import com.willsoon.willsoon_0_4.registration.token.ConfirmationTokenService;
@@ -12,7 +17,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailSendException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,8 +35,10 @@ import java.util.UUID;
 public class AppUserService implements UserDetailsService {
 
     private final  AppUserRepository appUserRepository;
-
     private final FriendshipRepository friendshipRepository;
+    private final ChatRepository chatRepository;
+    private final MessageRepository messageRepository;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailValidator emailValidator;
     private final ConfirmationTokenService confirmationTokenService;
@@ -62,16 +69,24 @@ public class AppUserService implements UserDetailsService {
         friendshipRepository.save(friendship2);
         friendshipRepository.save(friendship3);
 
+        Chat chat = new Chat(new ArrayList<>(), user1, user2);
+        chatRepository.save(chat);
+
+        Message message = new Message("ЭТО ВАЩЕ САМОЕ ПЕРВОЕ СООБЩЕНИЕ В ПРИЛОЖЕНИИ", chat, user1, user2, LocalDateTime.now(), MessageStatus.DELIVERED);
+        messageRepository.save(message);
+
+        Chat chat2 = new Chat(new ArrayList<>(), user1, user3);
+        chatRepository.save(chat2);
+
+        Message message2 = new Message("ЭТО ВАЩЕ САМОЕ ВТОРОЕ СООБЩЕНИЕ В ПРИЛОЖЕНИИ ЖЕСТЬ", chat2, user1, user3, LocalDateTime.now(), MessageStatus.DELIVERED);
+        messageRepository.save(message2);
+
     }
 
     @Override
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
-        /*UUID uuid = UUID.fromString(email);
-        AppUser user = appUserRepository.findById(uuid)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found" + uuid.toString()));
 
-        return new User(user.getUsername(), user.getPassword(), user.getAuthorities());*/
         return appUserRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new UsernameNotFoundException(

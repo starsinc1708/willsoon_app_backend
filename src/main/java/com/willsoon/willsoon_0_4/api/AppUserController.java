@@ -23,10 +23,8 @@ import java.util.List;
 @RequestMapping("/api/v1/user")
 public class AppUserController {
     private final AppUserService userService;
-
     private final AppUserRepository userRepository;
     private final JwtService jwtService;
-
     private final RefreshTokenService refreshTokenService;
 
     public String extractEmailFromToken(@NonNull HttpServletRequest request) {
@@ -42,10 +40,10 @@ public class AppUserController {
     }
 
 
-    @GetMapping("/allUsers")
+    /*@GetMapping("/allUsers")
     public ResponseEntity<List<AppUserPojo>> getUsers() {
         return ResponseEntity.ok().body(userService.getUsers());
-    }
+    }*/
 
     @PostMapping("/save")
     public ResponseEntity<AppUser> saveUser(@RequestBody AppUser user) {

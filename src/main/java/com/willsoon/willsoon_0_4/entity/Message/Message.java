@@ -23,13 +23,26 @@ public class Message extends BaseEntity {
     private String text;
 
     @ManyToOne
-    @JoinColumn(name = "chat_id", nullable = false)
+    @JoinColumn(name = "chat_id")
     private Chat chat;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private AppUser user;
+    @OneToOne
+    @JoinColumn(name = "sender_id", referencedColumnName = "id")
+    private AppUser sender;
+
+    @OneToOne
+    @JoinColumn(name = "recipient_id", referencedColumnName = "id")
+    private AppUser recipient;
 
     @Column(name = "sent_at")
     private LocalDateTime sentAt;
+
+    @Column(name = "status")
+    private MessageStatus status;
+
+    public Message(String text, AppUser sender, LocalDateTime sentAt) {
+        this.text = text;
+        this.sender = sender;
+        this.sentAt = sentAt;
+    }
 }
