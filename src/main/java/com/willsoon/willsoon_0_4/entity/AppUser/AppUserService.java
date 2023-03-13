@@ -17,6 +17,8 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailSendException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -140,6 +142,8 @@ public class AppUserService implements UserDetailsService {
     }
 
     public List<AppUserPojo> getUsers() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AppUser currentUser = (AppUser) authentication.getPrincipal();
         return appUserRepository.findAllByEnabledTrue()
                 .stream()
                 .map(user -> new AppUserPojo(user.getId(), user.getDBUsername(), user.getUsername(), user.getEnabled()))

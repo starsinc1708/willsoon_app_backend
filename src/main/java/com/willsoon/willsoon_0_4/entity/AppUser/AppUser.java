@@ -1,5 +1,6 @@
 package com.willsoon.willsoon_0_4.entity.AppUser;
 
+import com.sun.mail.iap.ByteArray;
 import com.willsoon.willsoon_0_4.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,6 +40,9 @@ public class AppUser extends BaseEntity implements UserDetails {
     private Boolean locked = false;
     @Column(name = "enabled")
     private Boolean enabled = false;
+
+    @Column(name = "user_image_link")
+    private String userProfileImageLink;
 
     public AppUser(String username,
                    String email,

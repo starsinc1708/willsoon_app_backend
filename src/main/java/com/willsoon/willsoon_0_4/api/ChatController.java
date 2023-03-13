@@ -42,19 +42,6 @@ public class ChatController {
         return userEmail;
     }
 
-    /*@GetMapping("/")
-    public ResponseEntity<ChatPojo> getChatById(@RequestParam("id") String id) {
-        Chat chat = chatService.getChatById(UUID.fromString(id));
-
-
-
-        ChatPojo chatPojo = new ChatPojo(
-                chat.getSender().getDBUsername(),
-                chat.getRecipient().getDBUsername(),
-                messageService.findLastMessageInChat(chat.getId()));
-        return ResponseEntity.ok().body(chatPojo);
-    }*/
-
     @GetMapping("/userChats")
     public ResponseEntity<List<ChatPojo>> getAllUserChats(@NonNull HttpServletRequest request) {
         AppUser curUser = userRepository.findByEmail(extractEmailFromToken(request)).get();
