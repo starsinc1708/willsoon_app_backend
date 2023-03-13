@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Getter
@@ -14,6 +16,7 @@ public class MessagePojo {
 
     private String text;
     private UUID senderId;
-    private LocalDateTime sendAt;
+    private LocalTime sendAtTime;
+    private LocalDate sendAtDate;
     private MessageStatus status;
 }

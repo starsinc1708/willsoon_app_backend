@@ -39,7 +39,8 @@ public class ChatService {
                     UUID recipientId = userId == chat.getSender().getId() ? chat.getRecipient().getId() : chat.getSender().getId();
                     String recipientUsername = userId == chat.getSender().getId() ? chat.getRecipient().getDBUsername() : chat.getSender().getDBUsername();
                     MessagePojo lastMessage = messageService.findLastMessageInChat(chat.getId());
-                    return new ChatPojo(recipientId, recipientUsername, lastMessage);
+                    Boolean online = userId == chat.getSender().getId() ? chat.getRecipient().getActive() : chat.getSender().getActive();
+                    return new ChatPojo(recipientId, recipientUsername, online, lastMessage);
                 })
                 .toList();
     }

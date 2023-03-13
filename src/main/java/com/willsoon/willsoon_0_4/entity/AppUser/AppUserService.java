@@ -53,7 +53,10 @@ public class AppUserService implements UserDetailsService {
         AppUser user2 = new AppUser("user2", "user2@example.com", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
         AppUser user3 = new AppUser("user3", "user3@example.com", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
         AppUser user4 = new AppUser("user4", "user4@example.com", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
-
+        user1.setActive(true);
+        user2.setActive(true);
+        user3.setActive(false);
+        user4.setActive(false);
         appUserRepository.save(user1);
         appUserRepository.enableAppUser(user1.getEmail());
         appUserRepository.save(user2);
@@ -83,6 +86,11 @@ public class AppUserService implements UserDetailsService {
         Message message2 = new Message("ЭТО ВАЩЕ САМОЕ ВТОРОЕ СООБЩЕНИЕ В ПРИЛОЖЕНИИ ЖЕСТЬ", chat2, user1, user3, LocalDateTime.now(), MessageStatus.DELIVERED);
         messageRepository.save(message2);
 
+        Chat chat3 = new Chat(new ArrayList<>(), user1, user4);
+        chatRepository.save(chat3);
+
+        Message message3 = new Message("ЭТО ВАЩЕ САМОЕ ВТОРОЕ СООБЩЕНИЕ В ПРИЛОЖЕНИИ ЖЕСТЬ", chat3, user1, user4, LocalDateTime.now(), MessageStatus.DELIVERED);
+        messageRepository.save(message3);
     }
 
     @Override

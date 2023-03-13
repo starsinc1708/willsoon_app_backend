@@ -40,11 +40,13 @@ public class MessageService {
             return new MessagePojo(
                     msg.getText(),
                     msg.getSender().getId(),
-                    msg.getSentAt(),
+                    msg.getSentAt().toLocalTime(),
+                    msg.getSentAt().toLocalDate(),
                     msg.getStatus());
         } else {
             return new MessagePojo(
                     "Начните Общение",
+                    null,
                     null,
                     null,
                     null);

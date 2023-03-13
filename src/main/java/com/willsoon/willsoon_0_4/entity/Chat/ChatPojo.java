@@ -13,5 +13,6 @@ import java.util.UUID;
 public class ChatPojo {
     private UUID recipientId;
     private String recipientUsername;
+    private Boolean online;
     private MessagePojo lastMessage;
 }
