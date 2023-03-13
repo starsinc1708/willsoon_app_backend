@@ -17,6 +17,6 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
     @Query(value = "SELECT m.* FROM Message m WHERE m.chat_id = :chatId ORDER BY m.sent_at DESC LIMIT 1", nativeQuery = true)
     Message findLastMessageByChatId(UUID chatId);
 
-    @Query(value = "SELECT * FROM message m WHERE m.chat_id = :chatId ORDER BY m.sent_at ASC OFFSET :offset ROWS FETCH NEXT 50 ROWS ONLY", nativeQuery = true)
+    @Query(value = "SELECT * FROM message m WHERE m.chat_id = :chatId ORDER BY m.sent_at ASC OFFSET :offset ROWS FETCH NEXT 50 + :offset ROWS ONLY", nativeQuery = true)
     List<Message> findMessagesByChatIdAndSentAtWithOffset(UUID chatId, Integer offset);
 }
