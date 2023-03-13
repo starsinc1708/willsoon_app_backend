@@ -50,7 +50,7 @@ public class ChatController {
     @GetMapping("/")
     public ResponseEntity<ChatPojo> getChatById(@RequestParam("id") String chatId, @RequestParam("offset") String offset) {
         Chat chat = chatService.getChatById(UUID.fromString(chatId));
-        List<MessagePojo> messagePojoList = messageService.findMessagesInChat(UUID.fromString(chatId), offset);
+        List<MessagePojo> messagePojoList = messageService.findMessagesInChat(UUID.fromString(chatId), Integer.parseInt(offset));
         return ResponseEntity.ok().body(
                 new ChatPojo(
                         chat.getId(),

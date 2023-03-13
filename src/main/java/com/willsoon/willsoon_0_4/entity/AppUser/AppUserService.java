@@ -105,6 +105,12 @@ public class AppUserService implements UserDetailsService {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
+        for (int i = 0; i < 50; i++) {
+            messageRepository.save(new Message(
+                    String.valueOf(i), chat, user1, user2, LocalDateTime.now(), MessageStatus.DELIVERED
+            ));
+        }
         Chat chat2 = new Chat(new ArrayList<>(), user1, user3);
         chatRepository.save(chat2);
 

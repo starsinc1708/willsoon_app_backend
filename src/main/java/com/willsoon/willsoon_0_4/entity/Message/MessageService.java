@@ -55,8 +55,8 @@ public class MessageService {
         }
     }
 
-    public List<MessagePojo> findMessagesInChat(UUID chatId, String offset) {
-        List<Message> messageList = messageRepository.findMessagesByChatIdAndSentAtWithOffset(chatId, Integer.getInteger(offset));
+    public List<MessagePojo> findMessagesInChat(UUID chatId, Integer offset) {
+        List<Message> messageList = messageRepository.findMessagesByChatIdAndSentAtWithOffset(chatId, offset);
         return messageList
                 .stream()
                 .map(message -> {

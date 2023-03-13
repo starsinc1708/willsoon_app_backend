@@ -14,9 +14,9 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
 
     Long countBySenderAndRecipientAndStatus(Optional<AppUser> sender, Optional<AppUser> recipient, MessageStatus status);
 
-    @Query(value = "SELECT m.* FROM Message m WHERE m.chat_id = :chatId ORDER BY m.created_date DESC LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT m.* FROM Message m WHERE m.chat_id = :chatId ORDER BY m.sent_at DESC LIMIT 1", nativeQuery = true)
     Message findLastMessageByChatId(UUID chatId);
 
-    @Query(value = "SELECT m.* FROM Message m WHERE m.chat_id = :chatId ORDER BY m.created_date DESC LIMIT 50+:offset", nativeQuery = true)
+    @Query(value = "SELECT * FROM message m WHERE m.chat_id = :chatId ORDER BY m.sent_at ASC OFFSET :offset ROWS FETCH NEXT 50 ROWS ONLY", nativeQuery = true)
     List<Message> findMessagesByChatIdAndSentAtWithOffset(UUID chatId, Integer offset);
 }
