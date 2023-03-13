@@ -2,11 +2,9 @@ package com.willsoon.willsoon_0_4.api;
 
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUser;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUserRepository;
-import com.willsoon.willsoon_0_4.entity.Chat.Chat;
-import com.willsoon.willsoon_0_4.entity.Chat.ChatNotification;
-import com.willsoon.willsoon_0_4.entity.Chat.ChatPojo;
-import com.willsoon.willsoon_0_4.entity.Chat.ChatService;
+import com.willsoon.willsoon_0_4.entity.Chat.*;
 import com.willsoon.willsoon_0_4.entity.Message.Message;
+import com.willsoon.willsoon_0_4.entity.Message.MessagePojo;
 import com.willsoon.willsoon_0_4.entity.Message.MessageService;
 import com.willsoon.willsoon_0_4.security.config.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +17,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,9 +42,21 @@ public class ChatController {
     }
 
     @GetMapping("/userChats")
-    public ResponseEntity<List<ChatPojo>> getAllUserChats(@NonNull HttpServletRequest request) {
+    public ResponseEntity<List<ChatItemPojo>> getAllUserChats(@NonNull HttpServletRequest request) {
         AppUser curUser = userRepository.findByEmail(extractEmailFromToken(request)).get();
         return ResponseEntity.ok().body(chatService.getUserChats(curUser.getId()));
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<ChatPojo> getChatById(@RequestParam("id") String chatId, @RequestParam("offset") String offset) {
+        Chat chat = chatService.getChatById(UUID.fromString(chatId));
+        List<MessagePojo> messagePojoList = messageService.findMessagesInChat(UUID.fromString(chatId), offset);
+        return ResponseEntity.ok().body(
+                new ChatPojo(
+                        chat.getId(),
+                        messagePojoList
+                )
+        );
     }
 
     @MessageMapping("/chat")

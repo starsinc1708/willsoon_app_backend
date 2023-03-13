@@ -20,6 +20,9 @@ public interface ChatRepository extends JpaRepository<Chat, UUID> {
     @Query("SELECT c from Chat c WHERE c.sender.id = :userId OR c.recipient.id = :userId")
     List<Chat> findAllBySenderOrRecipient(UUID userId);
 
+    @Query("SELECT c from Chat c WHERE (c.sender.id = :userId AND c.recipient.id = :recipientId) OR (c.recipient.id = :userId AND c.sender.id = :recipientId)")
+    Chat findBySenderAndRecipient(UUID recipientId, UUID userId);
+
 
     /*@Query("SELECT u.id from AppUser u JOIN Chat.users cu on u.id = cu.id " +
             "WHERE u.id <> :userId")

@@ -29,7 +29,7 @@ public class ChatService {
         return chatRepository.findById(uuid).get().getId();
     }
 
-    public List<ChatPojo> getUserChats(UUID userId) {
+    public List<ChatItemPojo> getUserChats(UUID userId) {
 
         List<Chat> chats = chatRepository.findAllBySenderOrRecipient(userId);
 
@@ -40,9 +40,22 @@ public class ChatService {
                     String recipientUsername = userId == chat.getSender().getId() ? chat.getRecipient().getDBUsername() : chat.getSender().getDBUsername();
                     MessagePojo lastMessage = messageService.findLastMessageInChat(chat.getId());
                     Boolean online = userId == chat.getSender().getId() ? chat.getRecipient().getActive() : chat.getSender().getActive();
-                    return new ChatPojo(recipientId, recipientUsername, online, lastMessage);
+                    return new ChatItemPojo(chat.getId(), recipientId, recipientUsername, online, lastMessage);
                 })
                 .toList();
     }
 
+    public ChatItemPojo getChatByRecipientId(UUID recipientId, UUID userId) {
+        Chat chat = chatRepository.findBySenderAndRecipient(recipientId, userId);
+        String recipientUsername = userId == chat.getSender().getId() ? chat.getRecipient().getDBUsername() : chat.getSender().getDBUsername();
+        MessagePojo lastMessage = messageService.findLastMessageInChat(chat.getId());
+        Boolean online = userId == chat.getSender().getId() ? chat.getRecipient().getActive() : chat.getSender().getActive();
+        return new ChatItemPojo(
+                chat.getId(),
+                recipientId,
+                recipientUsername,
+                online,
+                lastMessage
+        );
+    }
 }

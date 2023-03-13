@@ -79,7 +79,32 @@ public class AppUserService implements UserDetailsService {
 
         Message message = new Message("ЭТО ВАЩЕ САМОЕ ПЕРВОЕ СООБЩЕНИЕ В ПРИЛОЖЕНИИ", chat, user1, user2, LocalDateTime.now(), MessageStatus.DELIVERED);
         messageRepository.save(message);
-
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        Message m1 = new Message("123", chat, user2, user1, LocalDateTime.now(), MessageStatus.DELIVERED);
+        messageRepository.save(m1);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        Message m2 = new Message("1234", chat, user2, user1, LocalDateTime.now(), MessageStatus.DELIVERED);
+        messageRepository.save(m2);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        Message m3 = new Message("1234555", chat, user1, user2, LocalDateTime.now(), MessageStatus.DELIVERED);
+        messageRepository.save(m3);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         Chat chat2 = new Chat(new ArrayList<>(), user1, user3);
         chatRepository.save(chat2);
 

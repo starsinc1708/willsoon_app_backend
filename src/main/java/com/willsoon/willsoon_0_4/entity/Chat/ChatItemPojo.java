@@ -5,13 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.UUID;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class ChatPojo {
+public class ChatItemPojo {
     private UUID chatId;
-    private List<MessagePojo> messagePojoList;
+    private UUID recipientId;
+    private String recipientUsername;
+    private Boolean online;
+    private MessagePojo lastMessage;
 }

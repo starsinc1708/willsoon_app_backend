@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,4 +16,7 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
 
     @Query(value = "SELECT m.* FROM Message m WHERE m.chat_id = :chatId ORDER BY m.created_date DESC LIMIT 1", nativeQuery = true)
     Message findLastMessageByChatId(UUID chatId);
+
+    @Query(value = "SELECT m.* FROM Message m WHERE m.chat_id = :chatId ORDER BY m.created_date DESC LIMIT 50+:offset", nativeQuery = true)
+    List<Message> findMessagesByChatIdAndSentAtWithOffset(UUID chatId, Integer offset);
 }
