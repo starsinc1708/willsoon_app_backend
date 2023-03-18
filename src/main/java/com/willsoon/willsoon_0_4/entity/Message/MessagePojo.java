@@ -14,6 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class MessagePojo {
 
+    private UUID messageId;
     private String text;
     private UUID senderId;
     private LocalTime sendAtTime;

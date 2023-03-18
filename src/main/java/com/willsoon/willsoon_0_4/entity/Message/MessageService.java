@@ -40,6 +40,7 @@ public class MessageService {
         Message msg = messageRepository.findLastMessageByChatId(chatId);
         if (msg != null) {
             return new MessagePojo(
+                    msg.getId(),
                     msg.getText(),
                     msg.getSender().getId(),
                     msg.getSentAt().toLocalTime(),
@@ -47,6 +48,7 @@ public class MessageService {
                     msg.getStatus());
         } else {
             return new MessagePojo(
+                    null,
                     "Начните Общение",
                     null,
                     null,
@@ -61,6 +63,7 @@ public class MessageService {
                 .stream()
                 .map(message -> {
                     return new MessagePojo(
+                            message.getId(),
                             message.getText(),
                             message.getSender().getId(),
                             message.getSentAt().toLocalTime(),
