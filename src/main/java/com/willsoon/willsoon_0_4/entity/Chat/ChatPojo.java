@@ -13,5 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ChatPojo {
     private UUID chatId;
+    private Integer messagesLength;
     private List<MessagePojo> messagePojoList;
 }

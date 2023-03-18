@@ -54,6 +54,7 @@ public class ChatController {
         return ResponseEntity.ok().body(
                 new ChatPojo(
                         chat.getId(),
+                        messagePojoList.size(),
                         messagePojoList
                 )
         );
