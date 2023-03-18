@@ -1,4 +1,4 @@
-package com.willsoon.willsoon_0_4.registration.token;
+package com.willsoon.willsoon_0_4.registration.confirmationToken;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

@@ -1,4 +1,4 @@
-package com.willsoon.willsoon_0_4.registration.token;
+package com.willsoon.willsoon_0_4.registration.confirmationToken;
 
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUser;
 import jakarta.persistence.*;

@@ -18,12 +18,6 @@ import java.util.List;
 @Table(name = "chat")
 public class Chat extends BaseEntity {
 
-    /*@ManyToMany
-    @JoinTable(name = "chat_users",
-            joinColumns = {@JoinColumn(name = "chat_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    private List<AppUser> users = new ArrayList<>();*/
-
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> messages = new ArrayList<>();
 

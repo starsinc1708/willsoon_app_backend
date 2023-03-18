@@ -25,9 +25,6 @@ public interface AppUserRepository extends JpaRepository<AppUser, UUID> {
 
     Optional<AppUser> findByUsername(String username);
 
-    /*@Query("select case when f.user1.id = :userId" +
-            " then f.user2.id else f.user1.id end from Friendship f " +
-            "where f.user1.id = :userId OR f.user2.id = :userId")*/
     @Query("SELECT u FROM AppUser u " +
             "INNER JOIN Friendship f ON u.id = CASE " +
             "WHEN f.user1.id = :userId THEN f.user2.id ELSE f.user1.id END " +
@@ -37,4 +34,6 @@ public interface AppUserRepository extends JpaRepository<AppUser, UUID> {
 
     List<AppUser> findAllByEnabledTrue();
 
+    @Query("SELECT u FROM AppUser u WHERE u.username = :username")
+    Optional<AppUser> findByDBUsername(String username);
 }

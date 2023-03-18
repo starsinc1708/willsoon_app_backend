@@ -1,4 +1,4 @@
-package com.willsoon.willsoon_0_4.registration.token;
+package com.willsoon.willsoon_0_4.registration.confirmationToken;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

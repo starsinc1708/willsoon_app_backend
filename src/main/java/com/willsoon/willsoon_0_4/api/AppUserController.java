@@ -6,12 +6,16 @@ import com.willsoon.willsoon_0_4.entity.AppUser.AppUser;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUserPojo;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUserRepository;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUserService;
+import com.willsoon.willsoon_0_4.security.config.ErrorResponse;
 import com.willsoon.willsoon_0_4.security.config.JwtService;
+import com.willsoon.willsoon_0_4.security.config.customExceptions.UsernameAlreadyExistsException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -72,6 +76,25 @@ public class AppUserController {
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<AppUserPojo> getUser(@PathVariable String username) {
+        return ResponseEntity.ok().body(userService.getUser(username));
+    }
+
+    @PostMapping("/updateUsername/{newUsername}")
+    public ResponseEntity<?> updateUsername(@PathVariable String newUsername, @NonNull HttpServletRequest request) {
+        AppUser appUser = userRepository.findByEmail(extractEmailFromToken(request))
+                .orElseThrow(()-> new UsernameNotFoundException("User Not Found"));
+        AppUserPojo userPojo;
+        try {
+            userPojo = userService.updateUsername(appUser.getDBUsername(), newUsername);
+        } catch (UsernameAlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new ErrorResponse("Username already exists"));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(userPojo);
     }
 
 }

@@ -18,6 +18,19 @@ spring:
         format_sql: true
     show-sql: true
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 692494463642-a3tfbpviq5ukuc3d5igrkajnd5jnqka6.apps.googleusercontent.com
+            client-secret: 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
+            scope: openid,email,profile
+        provider:
+          google:
+            issuer-uri: https://accounts.google.com
+
+
   mail:
     host: localhost
     port: 1025

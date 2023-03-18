@@ -8,8 +8,8 @@ import com.willsoon.willsoon_0_4.entity.Message.Message;
 import com.willsoon.willsoon_0_4.entity.Message.MessageRepository;
 import com.willsoon.willsoon_0_4.entity.Message.MessageStatus;
 import com.willsoon.willsoon_0_4.registration.EmailValidator;
-import com.willsoon.willsoon_0_4.registration.token.ConfirmationToken;
-import com.willsoon.willsoon_0_4.registration.token.ConfirmationTokenService;
+import com.willsoon.willsoon_0_4.registration.confirmationToken.ConfirmationToken;
+import com.willsoon.willsoon_0_4.registration.confirmationToken.ConfirmationTokenService;
 import com.willsoon.willsoon_0_4.security.config.customExceptions.EmailAlreadyExistsException;
 import com.willsoon.willsoon_0_4.security.config.customExceptions.UsernameAlreadyExistsException;
 import jakarta.annotation.PostConstruct;
@@ -49,7 +49,7 @@ public class AppUserService implements UserDetailsService {
 
     @PostConstruct
     public void init() {
-        AppUser user1 = new AppUser("shizobred12", "starsinc12@yandex.ru", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
+        AppUser user1 = new AppUser("1", "1@ru.ru", bCryptPasswordEncoder.encode("1"), AppUserRole.USER);
         AppUser user2 = new AppUser("user2", "user2@example.com", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
         AppUser user3 = new AppUser("user3", "user3@example.com", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
         AppUser user4 = new AppUser("user4", "user4@example.com", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
@@ -80,21 +80,21 @@ public class AppUserService implements UserDetailsService {
         Message message = new Message("ЭТО ВАЩЕ САМОЕ ПЕРВОЕ СООБЩЕНИЕ В ПРИЛОЖЕНИИ", chat, user1, user2, LocalDateTime.now(), MessageStatus.DELIVERED);
         messageRepository.save(message);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         Message m1 = new Message("123", chat, user2, user1, LocalDateTime.now(), MessageStatus.DELIVERED);
         messageRepository.save(m1);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         Message m2 = new Message("1234", chat, user2, user1, LocalDateTime.now(), MessageStatus.DELIVERED);
         messageRepository.save(m2);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -106,7 +106,12 @@ public class AppUserService implements UserDetailsService {
             throw new RuntimeException(e);
         }
 
-        for (int i = 0; i < 150; i++) {
+        for (int i = 0; i < 100; i++) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             messageRepository.save(new Message(
                     String.valueOf(i), chat, user1, user2, LocalDateTime.now(), MessageStatus.DELIVERED
             ));
@@ -180,6 +185,22 @@ public class AppUserService implements UserDetailsService {
         return appUserRepository.save(user);
     }
 
+    public AppUserPojo updateUsername(String currentUsername, String newUsername) {
+        AppUser appUser = appUserRepository.findByDBUsername(currentUsername)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        String.format(USER_NOT_FOUND_MSG, currentUsername)));
+
+        if (appUserRepository.findByUsername(newUsername).isPresent()) {
+            throw new UsernameAlreadyExistsException("username already taken");
+        }
+
+        appUser.setUsername(newUsername);
+        appUser.setLastModifiedDate(LocalDateTime.now());
+        appUserRepository.save(appUser);
+
+        return new AppUserPojo(appUser.getId(), appUser.getDBUsername(), appUser.getUsername(), appUser.getEnabled());
+    }
+
     public List<AppUserPojo> getUsers() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         AppUser currentUser = (AppUser) authentication.getPrincipal();
@@ -194,5 +215,12 @@ public class AppUserService implements UserDetailsService {
                 .stream()
                 .map(user -> new AppUserPojo(user.getId(), user.getDBUsername(), user.getUsername(), user.getEnabled()))
                 .toList();
+    }
+
+    public AppUserPojo getUser(String username) {
+        AppUser appUser = appUserRepository.findByDBUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException(
+                        String.format(USER_NOT_FOUND_MSG, username)));
+        return new AppUserPojo(appUser.getId(), appUser.getDBUsername(), appUser.getUsername(), appUser.getEnabled());
     }
 }
