@@ -13,9 +13,11 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 public class MessagePojo {
-    private UUID messageId;
+    private String chatId;
+    private String messageId;
+    private String senderId;
+    private String recipientId;
     private String text;
-    private UUID senderId;
     private LocalTime sendAtTime;
     private LocalDate sendAtDate;
     private MessageStatus status;

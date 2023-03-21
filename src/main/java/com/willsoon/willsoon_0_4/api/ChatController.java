@@ -62,13 +62,11 @@ public class ChatController {
     }
 
     @MessageMapping("/chat")
-    public void processMessage(@Payload SocketMessagePojo messagePojo) {
-
-        Chat chat = chatService.getChatById(UUID.fromString(messagePojo.getChatId()));
+    public void processMessage(@Payload MessagePojo messagePojo) {
 
         Message message = new Message(
                 messagePojo.getText(),
-                chat,
+                chatService.getChatById(UUID.fromString(messagePojo.getChatId())),
                 userRepository.findById(UUID.fromString(messagePojo.getSenderId())).orElseThrow(() -> new UsernameNotFoundException("Sender not found")),
                 userRepository.findById(UUID.fromString(messagePojo.getRecipientId())).orElseThrow(() -> new UsernameNotFoundException("Recipient not found")),
                 LocalDateTime.now(),
@@ -80,12 +78,7 @@ public class ChatController {
         messagingTemplate.convertAndSendToUser(
                 message.getRecipient().getId().toString(),
                 "/queue/messages",
-                new SocketMessagePojo(
-                        saved.getChat().getId().toString(),
-                        saved.getSender().getId().toString(),
-                        saved.getRecipient().getId().toString(),
-                        saved.getText()
-                )
+                messagePojo
         );
     }
 }
