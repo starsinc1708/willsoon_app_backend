@@ -3,9 +3,7 @@ package com.willsoon.willsoon_0_4.api;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUser;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUserRepository;
 import com.willsoon.willsoon_0_4.entity.Chat.*;
-import com.willsoon.willsoon_0_4.entity.Message.Message;
-import com.willsoon.willsoon_0_4.entity.Message.MessagePojo;
-import com.willsoon.willsoon_0_4.entity.Message.MessageService;
+import com.willsoon.willsoon_0_4.entity.Message.*;
 import com.willsoon.willsoon_0_4.security.config.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
@@ -14,8 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,15 +61,23 @@ public class ChatController {
     }
 
     @MessageMapping("/chat")
-    public void processMessage(@Payload Message chatMessage) {
+    public void processMessage(@Payload SocketMessagePojo messagePojo) {
 
-        Chat chat = chatService.getChatById(chatMessage.getSender().getId());
-        chatMessage.setChat(chat);
+        Chat chat = chatService.getChatById(messagePojo.getChatId());
 
-        Message saved = messageService.save(chatMessage);
+        Message message = new Message(
+                messagePojo.getText(),
+                chat,
+                userRepository.findById(messagePojo.getSenderId()).orElseThrow(() -> new UsernameNotFoundException("user not found")),
+                chat.getRecipient(),
+                LocalDateTime.now(),
+                MessageStatus.DELIVERED
+        );
+
+        Message saved = messageService.save(message);
 
         messagingTemplate.convertAndSendToUser(
-                chatMessage.getRecipient().getId().toString(),
+                message.getRecipient().getId().toString(),
                 "/queue/messages",
                 new ChatNotification(
                         saved.getId().toString(),

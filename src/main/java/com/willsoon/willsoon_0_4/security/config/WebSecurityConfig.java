@@ -27,7 +27,7 @@ public class WebSecurityConfig {
                 .disable()
                 .authorizeHttpRequests()
                     .requestMatchers("/api/v*/auth/**").permitAll()
-                    .requestMatchers("/api/v*/chat-socket/**").permitAll()
+                //.requestMatchers("/api/v*/chat-socket/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
