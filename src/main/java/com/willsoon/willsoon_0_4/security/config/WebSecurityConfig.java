@@ -26,10 +26,8 @@ public class WebSecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                    .requestMatchers("/api/v*/auth/**")
-                    .permitAll()
-                .requestMatchers("/api/v*/chat-socket")
-                .permitAll()
+                    .requestMatchers("/api/v*/auth/**").permitAll()
+                    .requestMatchers("/api/v*/chat-socket/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -37,6 +35,7 @@ public class WebSecurityConfig {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 }
