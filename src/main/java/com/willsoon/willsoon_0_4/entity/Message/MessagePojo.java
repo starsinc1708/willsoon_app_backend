@@ -2,6 +2,7 @@ package com.willsoon.willsoon_0_4.entity.Message;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class MessagePojo {
     private String chatId;
     private String messageId;
