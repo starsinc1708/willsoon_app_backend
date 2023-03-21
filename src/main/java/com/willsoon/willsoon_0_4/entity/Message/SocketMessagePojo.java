@@ -12,8 +12,8 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 public class SocketMessagePojo {
-    private UUID chatId;
-    private UUID senderId;
-    private UUID recipientId;
+    private String chatId;
+    private String senderId;
+    private String recipientId;
     private String text;
 }
