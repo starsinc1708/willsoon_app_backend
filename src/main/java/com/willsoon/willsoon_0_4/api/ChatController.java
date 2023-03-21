@@ -62,7 +62,7 @@ public class ChatController {
     }
 
     @MessageMapping("/chat")
-    public void processMessage(@JsonFormat SocketMessagePojo messagePojo) {
+    public void processMessage(@Payload SocketMessagePojo messagePojo) {
 
         Chat chat = chatService.getChatById(messagePojo.getChatId());
 
