@@ -20,5 +20,5 @@ public class MessagePojo {
     private String text;
     private String sendAtTime;
     private String sendAtDate;
-    private MessageStatus status;
+    private String status;
 }
