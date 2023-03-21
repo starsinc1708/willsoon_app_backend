@@ -35,6 +35,11 @@ public class WebSecurityConfig {
                 .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        http
+                .csrf()
+                .disable()
+                .authorizeHttpRequests().requestMatchers("/api/v*/chat-socket")
+                .permitAll();
         return http.build();
     }
 }
