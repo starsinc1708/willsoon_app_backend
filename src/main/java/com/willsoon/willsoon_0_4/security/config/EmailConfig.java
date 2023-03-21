@@ -1,5 +1,6 @@
 package com.willsoon.willsoon_0_4.security.config;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import java.util.Properties;
 
 @Configuration
+@Getter
 public class EmailConfig {
 
     @Value("${spring.mail.host}")
@@ -23,15 +25,4 @@ public class EmailConfig {
     @Value("${spring.mail.port}")
     private int port;
 
-    @Bean
-    public JavaMailSender getJavaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(host);
-        mailSender.setPort(port);
-        mailSender.setUsername(username);
-        mailSender.setPassword(password);
-
-
-        return mailSender;
-    }
 }

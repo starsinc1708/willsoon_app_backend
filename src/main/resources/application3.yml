@@ -5,25 +5,6 @@ server:
   port: 8080
 
 spring:
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: stand300sub@gmail.com
-    password: upqzjgjeqgrrridj
-    protocol: smtp
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-          ssl:
-            trust: smtp.gmail.com
-
-
-
-
-
   datasource:
     password: 1808318083
     url: jdbc:postgresql://localhost:5432/willSoon_0_1
@@ -48,6 +29,24 @@ spring:
         provider:
           google:
             issuer-uri: https://accounts.google.com
+
+
+  mail:
+    host: localhost
+    port: 1025
+    username: hello
+    password: hello
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
 
   avatar:
     storage: "C:\\profile_images\\"

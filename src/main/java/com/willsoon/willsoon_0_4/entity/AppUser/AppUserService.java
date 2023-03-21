@@ -50,7 +50,7 @@ public class AppUserService implements UserDetailsService {
     @PostConstruct
     public void init() {
         AppUser user1 = new AppUser("1", "1@ru.ru", bCryptPasswordEncoder.encode("1"), AppUserRole.USER);
-        AppUser user2 = new AppUser("user2", "user2@example.com", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
+        AppUser user2 = new AppUser("starsinc12", "starsinc123@yandex.ru", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
         AppUser user3 = new AppUser("user3", "user3@example.com", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
         AppUser user4 = new AppUser("user4", "user4@example.com", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
         user1.setActive(true);
