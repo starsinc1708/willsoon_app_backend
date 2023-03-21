@@ -62,7 +62,7 @@ public class ChatController {
     }
 
     @MessageMapping("/chat")
-    public void processMessage(SocketMessagePojo messagePojo) {
+    public void processMessage(@Payload SocketMessagePojo messagePojo) {
 
         Chat chat = chatService.getChatById(UUID.fromString(messagePojo.getChatId()));
 
@@ -80,10 +80,11 @@ public class ChatController {
         messagingTemplate.convertAndSendToUser(
                 message.getRecipient().getId().toString(),
                 "/queue/messages",
-                new ChatNotification(
-                        saved.getId().toString(),
+                new SocketMessagePojo(
+                        saved.getChat().getId().toString(),
                         saved.getSender().getId().toString(),
-                        saved.getSender().getDBUsername()
+                        saved.getRecipient().getId().toString(),
+                        saved.getText()
                 )
         );
     }
