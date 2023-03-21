@@ -18,7 +18,7 @@ public class MessagePojo {
     private String senderId;
     private String recipientId;
     private String text;
-    private LocalTime sendAtTime;
-    private LocalDate sendAtDate;
+    private String sendAtTime;
+    private String sendAtDate;
     private MessageStatus status;
 }

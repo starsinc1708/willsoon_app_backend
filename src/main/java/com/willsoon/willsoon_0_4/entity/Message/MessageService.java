@@ -45,8 +45,8 @@ public class MessageService {
                     msg.getSender().getId().toString(),
                     msg.getRecipient().getId().toString(),
                     msg.getText(),
-                    msg.getSentAt().toLocalTime(),
-                    msg.getSentAt().toLocalDate(),
+                    msg.getSentAt().toLocalTime().toString(),
+                    msg.getSentAt().toLocalDate().toString(),
                     msg.getStatus());
         } else {
             return new MessagePojo(
@@ -71,8 +71,8 @@ public class MessageService {
                             message.getSender().getId().toString(),
                             message.getRecipient().getId().toString(),
                             message.getText(),
-                            message.getSentAt().toLocalTime(),
-                            message.getSentAt().toLocalDate(),
+                            message.getSentAt().toLocalTime().toString(),
+                            message.getSentAt().toLocalDate().toString(),
                             message.getStatus());
                 })
                 .toList();
