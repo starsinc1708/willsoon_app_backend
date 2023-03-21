@@ -1,5 +1,6 @@
 package com.willsoon.willsoon_0_4.api;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUser;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUserRepository;
 import com.willsoon.willsoon_0_4.entity.Chat.*;
@@ -61,7 +62,7 @@ public class ChatController {
     }
 
     @MessageMapping("/chat")
-    public void processMessage(@Payload SocketMessagePojo messagePojo) {
+    public void processMessage(@JsonFormat SocketMessagePojo messagePojo) {
 
         Chat chat = chatService.getChatById(messagePojo.getChatId());
 
@@ -69,7 +70,7 @@ public class ChatController {
                 messagePojo.getText(),
                 chat,
                 userRepository.findById(messagePojo.getSenderId()).orElseThrow(() -> new UsernameNotFoundException("user not found")),
-                chat.getRecipient(),
+                userRepository.findById(messagePojo.getRecipientId()).orElseThrow(() -> new UsernameNotFoundException("user not found")),
                 LocalDateTime.now(),
                 MessageStatus.DELIVERED
         );

@@ -14,5 +14,6 @@ import java.util.UUID;
 public class SocketMessagePojo {
     private UUID chatId;
     private UUID senderId;
+    private UUID recipientId;
     private String text;
 }
