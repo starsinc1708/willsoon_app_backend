@@ -83,9 +83,6 @@ public class AppUserService implements UserDetailsService {
         chat.setLastModifiedDate(LocalDateTime.now());
         chatRepository.save(chat);
 
-        Chat chat4 = new Chat(new ArrayList<>(), user2, user3);
-        chatRepository.save(chat4);
-
         Message message = new Message("ЭТО ВАЩЕ САМОЕ ПЕРВОЕ СООБЩЕНИЕ В ПРИЛОЖЕНИИ", chat, user1, user2, LocalDateTime.now(), MessageStatus.DELIVERED);
         messageRepository.save(message);
         try {
@@ -136,9 +133,6 @@ public class AppUserService implements UserDetailsService {
 
         Message message3 = new Message("ЭТО ВАЩЕ САМОЕ ВТОРОЕ СООБЩЕНИЕ В ПРИЛОЖЕНИИ ЖЕСТЬ", chat3, user1, user4, LocalDateTime.now(), MessageStatus.DELIVERED);
         messageRepository.save(message3);
-
-        Message message4 = new Message("ЭТО ВАЩЕ САМОЕ ВТОРОЕ СООБЩЕНИЕ В ПРИЛОЖЕНИИ ЖЕСТЬ", chat4, user2, user3, LocalDateTime.now(), MessageStatus.DELIVERED);
-        messageRepository.save(message4);
     }
 
     @Override
