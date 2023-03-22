@@ -136,6 +136,9 @@ public class AppUserService implements UserDetailsService {
 
         Message message3 = new Message("ЭТО ВАЩЕ САМОЕ ВТОРОЕ СООБЩЕНИЕ В ПРИЛОЖЕНИИ ЖЕСТЬ", chat3, user1, user4, LocalDateTime.now(), MessageStatus.DELIVERED);
         messageRepository.save(message3);
+
+        Message message4 = new Message("ЭТО ВАЩЕ САМОЕ ВТОРОЕ СООБЩЕНИЕ В ПРИЛОЖЕНИИ ЖЕСТЬ", chat4, user2, user3, LocalDateTime.now(), MessageStatus.DELIVERED);
+        messageRepository.save(message4);
     }
 
     @Override
