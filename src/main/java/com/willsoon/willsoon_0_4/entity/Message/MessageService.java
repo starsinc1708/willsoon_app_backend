@@ -54,7 +54,7 @@ public class MessageService {
                     null,
                     null,
                     null,
-                    null,
+                    "Начните общение",
                     null,
                     null,
                     null);
