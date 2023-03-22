@@ -45,9 +45,15 @@ public class ChatController {
     }
 
     @GetMapping("/userChats")
-    public ResponseEntity<List<ChatItemPojo>> getAllUserChats(@NonNull HttpServletRequest request) {
+    public ResponseEntity<?> getAllUserChats(@NonNull HttpServletRequest request) {
         AppUser curUser = userRepository.findByEmail(extractEmailFromToken(request)).get();
-        return ResponseEntity.ok().body(chatService.getUserChats(curUser.getId()));
+        try {
+            List<ChatItemPojo> chatItemPojos = chatService.getUserChats(curUser.getId());
+            return ResponseEntity.ok().body(chatItemPojos);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Wrong Chat Id"));
+        }
+
     }
 
     @GetMapping("/")
