@@ -5,10 +5,12 @@ import com.willsoon.willsoon_0_4.entity.AppUser.AppUser;
 import com.willsoon.willsoon_0_4.entity.AppUser.AppUserRepository;
 import com.willsoon.willsoon_0_4.entity.Chat.*;
 import com.willsoon.willsoon_0_4.entity.Message.*;
+import com.willsoon.willsoon_0_4.security.config.ErrorResponse;
 import com.willsoon.willsoon_0_4.security.config.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -49,16 +51,21 @@ public class ChatController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<ChatPojo> getChatById(@RequestParam("id") String chatId, @RequestParam("offset") String offset) {
-        Chat chat = chatService.getChatById(UUID.fromString(chatId));
-        List<MessagePojo> messagePojoList = messageService.findMessagesInChat(UUID.fromString(chatId), Integer.parseInt(offset));
-        return ResponseEntity.ok().body(
-                new ChatPojo(
-                        chat.getId(),
-                        messagePojoList.size(),
-                        messagePojoList
-                )
-        );
+    public ResponseEntity<?> getChatById(@RequestParam("id") String chatId, @RequestParam("offset") String offset) {
+
+        try {
+            Chat chat = chatService.getChatById(UUID.fromString(chatId));
+            List<MessagePojo> messagePojoList = messageService.findMessagesInChat(UUID.fromString(chatId), Integer.parseInt(offset));
+            return ResponseEntity.ok().body(
+                    new ChatPojo(
+                            chat.getId(),
+                            messagePojoList.size(),
+                            messagePojoList
+                    )
+            );
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Wrong Chat Id"));
+        }
     }
 
     @MessageMapping("/chat")

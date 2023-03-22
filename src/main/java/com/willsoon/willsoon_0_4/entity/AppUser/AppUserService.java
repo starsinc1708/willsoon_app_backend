@@ -50,13 +50,15 @@ public class AppUserService implements UserDetailsService {
     @PostConstruct
     public void init() {
         AppUser user1 = new AppUser("1", "1@ru.ru", bCryptPasswordEncoder.encode("1"), AppUserRole.USER);
-        AppUser user2 = new AppUser("starsinc12", "starsinc123@yandex.ru", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
+        AppUser user2 = new AppUser("2", "2@ru.ru", bCryptPasswordEncoder.encode("2"), AppUserRole.USER);
         AppUser user3 = new AppUser("user3", "user3@example.com", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
         AppUser user4 = new AppUser("user4", "user4@example.com", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
+
         user1.setActive(true);
         user2.setActive(true);
         user3.setActive(false);
         user4.setActive(false);
+
         appUserRepository.save(user1);
         appUserRepository.enableAppUser(user1.getEmail());
         appUserRepository.save(user2);
@@ -75,7 +77,14 @@ public class AppUserService implements UserDetailsService {
         friendshipRepository.save(friendship3);
 
         Chat chat = new Chat(new ArrayList<>(), user1, user2);
+
+        chat.setCreatedDate(LocalDateTime.now());
         chatRepository.save(chat);
+        chat.setLastModifiedDate(LocalDateTime.now());
+        chatRepository.save(chat);
+
+        Chat chat4 = new Chat(new ArrayList<>(), user2, user3);
+        chatRepository.save(chat4);
 
         Message message = new Message("ЭТО ВАЩЕ САМОЕ ПЕРВОЕ СООБЩЕНИЕ В ПРИЛОЖЕНИИ", chat, user1, user2, LocalDateTime.now(), MessageStatus.DELIVERED);
         messageRepository.save(message);
@@ -198,6 +207,13 @@ public class AppUserService implements UserDetailsService {
         appUser.setLastModifiedDate(LocalDateTime.now());
         appUserRepository.save(appUser);
 
+        return new AppUserPojo(appUser.getId(), appUser.getDBUsername(), appUser.getUsername(), appUser.getEnabled());
+    }
+
+    public AppUserPojo updateStatus(AppUser appUser, String status) {
+        appUser.setUserStatus(status);
+        appUser.setLastModifiedDate(LocalDateTime.now());
+        appUserRepository.save(appUser);
         return new AppUserPojo(appUser.getId(), appUser.getDBUsername(), appUser.getUsername(), appUser.getEnabled());
     }
 

@@ -22,7 +22,7 @@ public class ChatService {
     private MessageService messageService;
     public Chat getChatById(UUID uuid) {
         return chatRepository.findAllById(uuid)
-                .orElseThrow();
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     public UUID getChatId(UUID uuid) {

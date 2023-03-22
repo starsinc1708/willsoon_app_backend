@@ -5,7 +5,9 @@ import com.willsoon.willsoon_0_4.entity.BaseEntity;
 import com.willsoon.willsoon_0_4.entity.Message.Message;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,4 +30,5 @@ public class Chat extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "recipient_id", referencedColumnName = "id")
     private AppUser recipient;
+
 }

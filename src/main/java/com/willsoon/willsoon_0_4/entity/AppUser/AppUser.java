@@ -21,6 +21,10 @@ public class AppUser extends BaseEntity implements UserDetails {
 
     @Column(name = "username", nullable = false)
     private String username;
+
+    @Column(name = "status")
+    private String userStatus;
+
     @Column(name = "email", nullable = false)
     private String email;
     @Column(name = "password", nullable = false)

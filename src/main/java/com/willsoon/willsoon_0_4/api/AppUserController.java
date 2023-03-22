@@ -79,8 +79,14 @@ public class AppUserController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<AppUserPojo> getUser(@PathVariable String username) {
-        return ResponseEntity.ok().body(userService.getUser(username));
+    public ResponseEntity<?> getUser(@PathVariable String username) {
+        try {
+            AppUserPojo userPojo = userService.getUser(username);
+            return ResponseEntity.ok().body(userPojo);
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse("Username not Found"));
+        }
     }
 
     @PostMapping("/updateUsername/{newUsername}")
@@ -94,6 +100,14 @@ public class AppUserController {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(new ErrorResponse("Username already exists"));
         }
+        return ResponseEntity.status(HttpStatus.OK).body(userPojo);
+    }
+
+    @PostMapping("/setStatus/")
+    public ResponseEntity<?> updateStatus(@RequestParam("status") String status, @NonNull HttpServletRequest request) {
+        AppUser appUser = userRepository.findByEmail(extractEmailFromToken(request))
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
+        AppUserPojo userPojo = userService.updateStatus(appUser, status);
         return ResponseEntity.status(HttpStatus.OK).body(userPojo);
     }
 
