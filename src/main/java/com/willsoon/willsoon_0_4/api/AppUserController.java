@@ -43,6 +43,17 @@ public class AppUserController {
         return userEmail;
     }
 
+    @GetMapping("/userId")
+    public ResponseEntity<?> getUserIdByEmail(@NonNull HttpServletRequest request) {
+        AppUser curUser = userRepository.findByEmail(extractEmailFromToken(request)).get();
+        AppUserPojo userPojo = new AppUserPojo(
+                curUser.getId(),
+                curUser.getDBUsername(),
+                curUser.getEmail(),
+                curUser.getActive()
+        );
+        return ResponseEntity.ok().body(userPojo);
+    }
 
     @GetMapping("/allUsers")
     public ResponseEntity<List<AppUserPojo>> getUsers() {
@@ -78,14 +89,25 @@ public class AppUserController {
                 .build();
     }
 
-    @GetMapping("/{username}")
-    public ResponseEntity<?> getUser(@PathVariable String username) {
+//    @GetMapping("/{username}")
+//    public ResponseEntity<?> getUser(@PathVariable String username) {
+//        try {
+//            AppUserPojo userPojo = userService.getUser(username);
+//            return ResponseEntity.ok().body(userPojo);
+//        } catch (UsernameNotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body(new ErrorResponse("Username not Found"));
+//        }
+//    }
+
+    @GetMapping("/")
+    public ResponseEntity<?> getChatById(@RequestParam("id") String userId) {
         try {
-            AppUserPojo userPojo = userService.getUser(username);
+            AppUserPojo userPojo = userService.getUserById(userId);
             return ResponseEntity.ok().body(userPojo);
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponse("Username not Found"));
+                    .body(new ErrorResponse("User Id not Found"));
         }
     }
 

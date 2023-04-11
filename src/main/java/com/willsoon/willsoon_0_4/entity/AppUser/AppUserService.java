@@ -157,7 +157,7 @@ public class AppUserService implements UserDetailsService {
             throw new EmailAlreadyExistsException("email already taken");
         }
 
-        if(appUserRepository.findByUsername(appUser.getUsername()).isPresent()) {
+        if(appUserRepository.findByUsername(appUser.getDBUsername()).isPresent()) {
             throw new UsernameAlreadyExistsException("username already taken");
         }
 
@@ -166,7 +166,7 @@ public class AppUserService implements UserDetailsService {
         appUser.setPassword(encodedPassword);
         appUser.setCreatedDate(LocalDateTime.now());
         appUser.setLastModifiedDate(LocalDateTime.now());
-
+        appUser.setActive(false);
         appUserRepository.save(appUser);
 
         String token = UUID.randomUUID().toString();
@@ -204,14 +204,14 @@ public class AppUserService implements UserDetailsService {
         appUser.setLastModifiedDate(LocalDateTime.now());
         appUserRepository.save(appUser);
 
-        return new AppUserPojo(appUser.getId(), appUser.getDBUsername(), appUser.getUsername(), appUser.getEnabled());
+        return new AppUserPojo(appUser.getId(), appUser.getDBUsername(), appUser.getUsername(), appUser.getActive());
     }
 
     public AppUserPojo updateStatus(AppUser appUser, String status) {
         appUser.setUserStatus(status);
         appUser.setLastModifiedDate(LocalDateTime.now());
         appUserRepository.save(appUser);
-        return new AppUserPojo(appUser.getId(), appUser.getDBUsername(), appUser.getUsername(), appUser.getEnabled());
+        return new AppUserPojo(appUser.getId(), appUser.getDBUsername(), appUser.getUsername(), appUser.getActive());
     }
 
     public List<AppUserPojo> getUsers() {
@@ -219,14 +219,14 @@ public class AppUserService implements UserDetailsService {
         AppUser currentUser = (AppUser) authentication.getPrincipal();
         return appUserRepository.findAllByEnabledTrue()
                 .stream()
-                .map(user -> new AppUserPojo(user.getId(), user.getDBUsername(), user.getUsername(), user.getEnabled()))
+                .map(user -> new AppUserPojo(user.getId(), user.getDBUsername(), user.getUsername(), user.getActive()))
                 .toList();
     }
 
     public List<AppUserPojo> getUserFriends(UUID userId) {
         return appUserRepository.findFriendsById(userId)
                 .stream()
-                .map(user -> new AppUserPojo(user.getId(), user.getDBUsername(), user.getUsername(), user.getEnabled()))
+                .map(user -> new AppUserPojo(user.getId(), user.getDBUsername(), user.getUsername(), user.getActive()))
                 .toList();
     }
 
@@ -234,6 +234,13 @@ public class AppUserService implements UserDetailsService {
         AppUser appUser = appUserRepository.findByDBUsername(username).orElseThrow(() ->
                 new UsernameNotFoundException(
                         String.format(USER_NOT_FOUND_MSG, username)));
-        return new AppUserPojo(appUser.getId(), appUser.getDBUsername(), appUser.getUsername(), appUser.getEnabled());
+        return new AppUserPojo(appUser.getId(), appUser.getDBUsername(), appUser.getUsername(), appUser.getActive());
+    }
+
+    public AppUserPojo getUserById(String userId) {
+        AppUser appUser = appUserRepository.findById(UUID.fromString(userId)).orElseThrow(() ->
+                new UsernameNotFoundException(
+                        String.format(USER_NOT_FOUND_MSG, userId)));
+        return new AppUserPojo(appUser.getId(), appUser.getDBUsername(), appUser.getUsername(), appUser.getActive());
     }
 }

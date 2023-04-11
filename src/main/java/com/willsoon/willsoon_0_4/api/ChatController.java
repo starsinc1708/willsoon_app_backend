@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,19 +77,31 @@ public class ChatController {
     }
 
     @MessageMapping("/chat")
-    public void processMessage(@Payload MessagePojo messagePojo) {
+    public void processMessage(@Payload MessageSocketPojo messageSocketPojo) {
 
         Message message = new Message(
-                messagePojo.getText(),
-                chatService.getChatById(UUID.fromString(messagePojo.getChatId())),
-                userRepository.findById(UUID.fromString(messagePojo.getSenderId())).orElseThrow(() -> new UsernameNotFoundException("Sender not found")),
-                userRepository.findById(UUID.fromString(messagePojo.getRecipientId())).orElseThrow(() -> new UsernameNotFoundException("Recipient not found")),
+                messageSocketPojo.getText(),
+                chatService.getChatById(UUID.fromString(messageSocketPojo.getChatId())),
+                userRepository.findById(UUID.fromString(messageSocketPojo.getSenderId())).orElseThrow(() -> new UsernameNotFoundException("Recipient not found")),
+                userRepository.findById(UUID.fromString(messageSocketPojo.getRecipientId())).orElseThrow(() -> new UsernameNotFoundException("Recipient not found")),
                 LocalDateTime.now(),
                 MessageStatus.DELIVERED
         );
 
         Message saved = messageService.save(message);
 
+        MessagePojo messagePojo = new MessagePojo(
+                saved.getChat().getId().toString(),
+                saved.getId().toString(),
+                saved.getSender().getId().toString(),
+                saved.getRecipient().getId().toString(),
+                saved.getText(),
+                saved.getSentAt().toLocalTime().toString(),
+                saved.getSentAt().toLocalDate().toString(),
+                saved.getStatus().toString()
+        );
+
+        System.out.println(messagePojo);
         messagingTemplate.convertAndSendToUser(
                 message.getRecipient().getId().toString(),
                 "/queue/messages",

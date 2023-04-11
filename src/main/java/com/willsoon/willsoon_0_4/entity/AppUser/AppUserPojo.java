@@ -15,5 +15,5 @@ public class AppUserPojo {
     private UUID id;
     private String username;
     private String email;
-    private Boolean enabled;
+    private Boolean active;
 }
