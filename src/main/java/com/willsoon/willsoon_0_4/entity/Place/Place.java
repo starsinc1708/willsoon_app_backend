@@ -16,6 +16,12 @@ public class Place extends BaseEntity {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "latitude")
+    private String latitude;
+
+    @Column(name = "longitude")
+    private String longitude;
+
     @Column(name = "average_rating")
     private Double averageRating;
 

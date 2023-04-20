@@ -7,6 +7,9 @@ import com.willsoon.willsoon_0_4.entity.Friendship.FriendshipRepository;
 import com.willsoon.willsoon_0_4.entity.Message.Message;
 import com.willsoon.willsoon_0_4.entity.Message.MessageRepository;
 import com.willsoon.willsoon_0_4.entity.Message.MessageStatus;
+import com.willsoon.willsoon_0_4.entity.Place.Place;
+import com.willsoon.willsoon_0_4.entity.Place.PlaceRepository;
+import com.willsoon.willsoon_0_4.entity.Place.TypeOfPlace;
 import com.willsoon.willsoon_0_4.registration.EmailValidator;
 import com.willsoon.willsoon_0_4.registration.confirmationToken.ConfirmationToken;
 import com.willsoon.willsoon_0_4.registration.confirmationToken.ConfirmationTokenService;
@@ -40,6 +43,7 @@ public class AppUserService implements UserDetailsService {
     private final FriendshipRepository friendshipRepository;
     private final ChatRepository chatRepository;
     private final MessageRepository messageRepository;
+    private final PlaceRepository placeRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmailValidator emailValidator;
@@ -53,6 +57,18 @@ public class AppUserService implements UserDetailsService {
         AppUser user2 = new AppUser("2", "2@ru.ru", bCryptPasswordEncoder.encode("2"), AppUserRole.USER);
         AppUser user3 = new AppUser("user3", "user3@example.com", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
         AppUser user4 = new AppUser("user4", "user4@example.com", bCryptPasswordEncoder.encode("password"), AppUserRole.USER);
+
+        Place place1 = new Place("Московское шоссе, 43","53.223026", "50.191438", 4.9, 800d, "DUNGEON", TypeOfPlace.CAFE, "тайм-кафе, кальянная");
+        Place place2 = new Place("Парковый переулок, 5","53.224417", "50.175856", 4.2, 2000d, "Енот", TypeOfPlace.CAFE, "лаунж-бар");
+        Place place3 = new Place("Молодогвардейская улица, 153","53.201384", "50.108895", 3.9, 500d, "Суета тайм кафе", TypeOfPlace.CAFE, "тайм-кафе, антикафе");
+        Place place4 = new Place("Скляренко, 32","53.216948", "50.161346", 4.6, 310d, "Спелое место", TypeOfPlace.CAFE, "антикафе, тайм-кафе");
+        Place place5 = new Place("Молодогвардейская улица, 84","53.187536", "50.095769", 4.8, 200d, "Hookah House", TypeOfPlace.CAFE, "кальянная");
+
+        placeRepository.save(place1);
+        placeRepository.save(place2);
+        placeRepository.save(place3);
+        placeRepository.save(place4);
+        placeRepository.save(place5);
 
         user1.setActive(true);
         user2.setActive(true);
