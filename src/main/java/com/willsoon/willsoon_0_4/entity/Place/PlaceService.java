@@ -3,9 +3,11 @@ package com.willsoon.willsoon_0_4.entity.Place;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -28,6 +30,18 @@ public class PlaceService {
                         place.getAddress()
                 ))
                 .toList();
+    }
+
+    public PlacePojo getPlaceById(UUID placeId) throws Exception {
+        Place place =  placeRepository.findById(placeId).orElseThrow(()-> new Exception("Place Not Found"));
+
+        return new PlacePojo(
+                place.getMainPicture(),
+                place.getName(),
+                place.getAverageRating().toString(),
+                place.getDescription(),
+                place.getAddress()
+        );
     }
 
 }

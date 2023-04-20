@@ -16,6 +16,9 @@ public class Place extends BaseEntity {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "mainPicture")
+    private String mainPicture;
+
     @Column(name = "latitude")
     private String latitude;
 
