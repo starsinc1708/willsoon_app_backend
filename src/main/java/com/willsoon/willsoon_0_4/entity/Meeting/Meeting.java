@@ -9,7 +9,6 @@ import lombok.*;
 @Setter
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "meeting")
 public class Meeting  extends BaseEntity {
